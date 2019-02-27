@@ -74,9 +74,9 @@ public class TokenHelper {
 
     public Authentication getAuthentication(String token) {
         UserDetails userDetails = myUserDetails.loadUserByUsername(getUsername(token));
-        Optional<User> userByUsername = userRepository.findUserByUsername(getUsername(token));
-        if(userByUsername.isPresent()) {
-            User user = userByUsername.get();
+        Optional<User> optionalUser = userRepository.findUserByUsername(getUsername(token));
+        if(optionalUser.isPresent()) {
+            User user = optionalUser.get();
             return new UsernamePasswordAuthenticationToken(userDetails, authorityDetails.getAuthorities(user), userDetails.getAuthorities());
         }
         return null;

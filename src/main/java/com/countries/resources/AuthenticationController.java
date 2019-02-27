@@ -66,7 +66,7 @@ public class AuthenticationController {
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
             // token creation
-            Optional<User> optionalUser = userRepository.findUserByUsername(authenticationRequest.getUsername());
+            Optional<User>optionalUser = userRepository.findUserByUsername(authenticationRequest.getUsername());
             if (!optionalUser.isPresent()) {
                 throw new CustomException("User not found", HttpStatus.NOT_FOUND);
             }

@@ -1,6 +1,7 @@
 package com.countries.core.security;
 
 import com.countries.core.exceptions.CustomException;
+import com.countries.core.utils.AppUtils;
 import com.countries.jpa.entity.User;
 import com.countries.jpa.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -33,13 +34,21 @@ public class MyUserDetails implements UserDetailsService {
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException, DisabledException {
 
+        User user;
+
         try {
+//            if(username.contains("@")) {
+//                userOptional = userRepository.findByEmail(username);
+//            } else {
+//                userOptional = userRepository.findUserByUsername(username);
+//            }
             Optional<User> userOptional = userRepository.findUserByUsername(username);
 
-            log.info("user details : {}", userOptional);
+            log.info("user details : {}", AppUtils.toJSON(userOptional));
 
             if (userOptional.isPresent()) {
-                User user = userOptional.get();
+                user = userOptional.get();
+                log.info("user getUsername : {}", user.getUsername());
                 if (user.getStatus().equals(true)) {
                     user.setLastLoginDate(new Timestamp(System.currentTimeMillis()));
                     userRepository.saveAndFlush(user);

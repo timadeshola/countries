@@ -2,6 +2,7 @@ package com.countries.resources;
 
 import com.countries.jpa.entity.Role;
 import com.countries.model.request.RoleRequest;
+import com.countries.model.response.PaginateResponse;
 import com.countries.model.response.RoleResponse;
 import com.countries.services.RoleService;
 import io.swagger.annotations.*;
@@ -10,7 +11,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.querydsl.binding.QuerydslPredicate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -92,7 +92,7 @@ public class RoleController {
 
     @PreAuthorize("hasAnyRole('ADMIN')")
     @GetMapping("all")
-    @ApiOperation(httpMethod = "GET", value = "Resource to view all roles", response = Role.class, nickname = "viewAllRoles", notes = "You can perform search operations on this method (e.g www.zonetechpark.com/api/v1/role/all?name=author)")
+    @ApiOperation(httpMethod = "GET", value = "Resource to view all roles", response = PaginateResponse.class, nickname = "viewAllRoles")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "View All Roles"),
             @ApiResponse(code = 400, message = "Something went wrong, check you request"),
@@ -101,13 +101,18 @@ public class RoleController {
             @ApiResponse(code = 404, message = "Resource not found, i guess your url is not correct"),
             @ApiResponse(code = 428, message = "Precondition Required, Illegal Argument supplied")
     })
-    public ResponseEntity<Page<Role>> viewAllRoles(@ApiParam(name = "page", value = "default number of page", required = true)
+    public ResponseEntity<PaginateResponse> viewAllRoles(@ApiParam(name = "page", value = "default number of page", required = true)
                                                    @RequestParam(value = "page", defaultValue = "0") int page,
                                                    @ApiParam(name = "size", value = "default size on result set", required = true)
                                                    @RequestParam(value = "size", defaultValue = "5") int size ) {
         PageRequest pageable = PageRequest.of(page, size, Sort.Direction.DESC, "dateCreated");
         Page<Role> roles = roleService.findAllRoles(pageable);
-        return new ResponseEntity<>(roles, HttpStatus.OK);
+
+        PaginateResponse response = new PaginateResponse();
+        response.setContents(roles.getContent());
+        response.setTotalElements(roles.getTotalElements());
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PreAuthorize("hasAnyRole('ADMIN')")

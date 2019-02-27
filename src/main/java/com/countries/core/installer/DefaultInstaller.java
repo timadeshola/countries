@@ -53,26 +53,26 @@ public class DefaultInstaller implements ApplicationListener<ContextRefreshedEve
         createUserIfNotFound("timadeshola", "timadeshola@gmail.com", "John", "Adeshola", "Password@123",  adminRole);
         createUserIfNotFound("user", "user@example.com", "Paul", "Essien", "Password@123", userRole);
 
-        createCountryIfNotExist("Afghanistan", "Asia", "AF");
-        createCountryIfNotExist("Albania", "Europe", "AL");
-        createCountryIfNotExist("Algeria", "Africa", "AG");
-        createCountryIfNotExist("Andorra", "Europe", "AD");
-        createCountryIfNotExist("Angola", "Africa", "AO");
-        createCountryIfNotExist("Anguilla", "Americas", "AI");
-        createCountryIfNotExist("Argentina", "Americas", "AR");
-        createCountryIfNotExist("Australia", "Oceania", "AU");
-        createCountryIfNotExist("Austria", "Europe", "AT");
-        createCountryIfNotExist("Benin", "Africa", "BJ");
-        createCountryIfNotExist("Nigeria", "Africa", "NGR");
-        createCountryIfNotExist("Burkina Faso", "Africa", "BF");
-        createCountryIfNotExist("United Kingdom", "Europe", "UK");
-        createCountryIfNotExist("United States of America", "Americas", "USA");
-        createCountryIfNotExist("Ghana", "Africa", "GH");
-        createCountryIfNotExist("Cameroon", "Africa", "CM");
-        createCountryIfNotExist("Uruguay", "Americas", "UY");
-        createCountryIfNotExist("Africa", "Africa", "UG");
-        createCountryIfNotExist("Ukraine", "Europe", "UA");
-        createCountryIfNotExist("Turkey", "Asia", "TR");
+        createCountryIfNotExist("Afghanistan", "Asia");
+        createCountryIfNotExist("Albania", "Europe");
+        createCountryIfNotExist("Algeria", "Africa");
+        createCountryIfNotExist("Andorra", "Europe");
+        createCountryIfNotExist("Angola", "Africa");
+        createCountryIfNotExist("Anguilla", "Americas");
+        createCountryIfNotExist("Argentina", "Americas");
+        createCountryIfNotExist("Australia", "Oceania");
+        createCountryIfNotExist("Austria", "Europe");
+        createCountryIfNotExist("Benin", "Africa");
+        createCountryIfNotExist("Nigeria", "Africa");
+        createCountryIfNotExist("Burkina Faso", "Africa");
+        createCountryIfNotExist("United Kingdom", "Europe");
+        createCountryIfNotExist("United States of America", "Americas");
+        createCountryIfNotExist("Ghana", "Africa");
+        createCountryIfNotExist("Cameroon", "Africa");
+        createCountryIfNotExist("Uruguay", "Americas");
+        createCountryIfNotExist("Africa", "Africa");
+        createCountryIfNotExist("Ukraine", "Europe");
+        createCountryIfNotExist("Turkey", "Asia");
 
         alreadySetup = Boolean.TRUE;
     }
@@ -109,7 +109,7 @@ public class DefaultInstaller implements ApplicationListener<ContextRefreshedEve
     }
 
     @Transactional
-    protected void createCountryIfNotExist(String name, String continent, String code) {
+    protected void createCountryIfNotExist(String name, String continent) {
         Optional<Country> optionalBook = countryRepository.findByName(name);
         if(optionalBook.isPresent()) {
             return;
@@ -117,7 +117,6 @@ public class DefaultInstaller implements ApplicationListener<ContextRefreshedEve
         Country country = new Country();
         country.setName(name);
         country.setContinent(continent);
-        country.setCode(code);
         countryRepository.save(country);
     }
 }

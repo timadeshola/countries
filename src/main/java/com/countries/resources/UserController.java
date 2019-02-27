@@ -92,7 +92,7 @@ public class UserController {
 
     @PreAuthorize("hasAnyRole('ADMIN')")
     @GetMapping("all")
-    @ApiOperation(httpMethod = "GET", value = "Resource to view all users", response = PaginateResponse.class, nickname = "findAllUsers", notes = "You can perform search operations on this method (e.g www.zonetechpark.com/api/v1/user/all?username=author)")
+    @ApiOperation(httpMethod = "GET", value = "Resource to view all users", response = PaginateResponse.class, nickname = "findAllUsers")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "View All Users"),
             @ApiResponse(code = 400, message = "Something went wrong, check you request"),
