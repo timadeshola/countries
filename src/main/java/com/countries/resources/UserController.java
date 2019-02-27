@@ -104,7 +104,7 @@ public class UserController {
     public ResponseEntity<PaginateResponse> findAllUsers(@ApiParam(name = "page", value = "default number of page", required = true)
                                                          @RequestParam(value = "page", defaultValue = "0") int page,
                                                          @ApiParam(name = "size", value = "default size on result set", required = true)
-                                                         @RequestParam(value = "size", defaultValue = "10") int size) {
+                                                         @RequestParam(value = "size", defaultValue = "5") int size) {
         PageRequest pageable = PageRequest.of(page, size, Sort.Direction.DESC, "dateCreated");
         Page<User> users = userService.findAllUsers(pageable);
 
@@ -116,7 +116,7 @@ public class UserController {
     }
 
     @GetMapping("view-user")
-    @PreAuthorize("hasAnyRole('ROLE_AUTHOR', 'ROLE_EDITOR')")
+    @PreAuthorize("hasRole('ADMIN')")
     @ApiOperation(httpMethod = "GET", value = "Resource to view a user by User ID", response = UserResponse.class, nickname = "viewUserById")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "View a User by User Id"),
@@ -138,7 +138,7 @@ public class UserController {
     }
 
     @GetMapping("view-user-username")
-    @PreAuthorize("hasAnyRole('ROLE_AUTHOR', 'ROLE_EDITOR')")
+    @PreAuthorize("hasRole('ADMIN')")
     @ApiOperation(httpMethod = "GET", value = "Resource to view a user by User name", response = UserResponse.class, nickname = "viewUserByUsername")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "View a User by Username"),
@@ -159,7 +159,7 @@ public class UserController {
     }
 
     @PutMapping("status")
-    @PreAuthorize("hasRole('ROLE_EDITOR')")
+    @PreAuthorize("hasRole('ADMIN')")
     @ApiOperation(httpMethod = "PUT", value = "Resource to toggle user status", responseReference = "true", nickname = "toggleUserStatus")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Toggle user status successful"),

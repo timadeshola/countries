@@ -6,6 +6,8 @@ import com.countries.jpa.repository.RoleRepository;
 import com.countries.model.request.RoleRequest;
 import com.countries.services.RoleService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -58,6 +60,11 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public Optional<Role> viewRoleByName(String name) {
         return roleRepository.findRoleByName(name);
+    }
+
+    @Override
+    public Page<Role> findAllRoles(Pageable pageable) {
+        return roleRepository.findAll(pageable);
     }
 
     @Override
