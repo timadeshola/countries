@@ -1,22 +1,17 @@
 package com.countries.services;
 
 import com.countries.jpa.entity.Role;
-import com.countries.model.response.RoleResponse;
-import com.querydsl.core.types.Predicate;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import com.countries.model.request.RoleRequest;
 
 import java.util.Optional;
 
 public interface RoleService {
 
-    Role createRole(RoleResponse resource);
+    Role createRole(RoleRequest resource);
 
-    Role updateRole(RoleResponse resource);
+    Role updateRole(RoleRequest resource);
 
     void deleteRole(Long roleId);
-
-    Page<Role> viewAllRoles(Predicate predicate, Pageable pageable);
 
     Optional<Role> viewRoleById(Long roleId);
 

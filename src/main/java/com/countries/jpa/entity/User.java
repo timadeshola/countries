@@ -10,15 +10,11 @@ import java.util.Set;
 
 @Entity
 @Table(name = "USERS")
-@Setter
-@Getter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @RequiredArgsConstructor
-@ToString
-@EqualsAndHashCode
 @Audited
-@Builder
 public class User implements Serializable {
 
     @Id

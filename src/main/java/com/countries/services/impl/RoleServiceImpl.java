@@ -3,12 +3,9 @@ package com.countries.services.impl;
 import com.countries.core.exceptions.CustomException;
 import com.countries.jpa.entity.Role;
 import com.countries.jpa.repository.RoleRepository;
-import com.countries.model.response.RoleResponse;
+import com.countries.model.request.RoleRequest;
 import com.countries.services.RoleService;
-import com.querydsl.core.types.Predicate;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,7 +23,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public Role createRole(RoleResponse resource) {
+    public Role createRole(RoleRequest resource) {
         Optional<Role> optionalRole = roleRepository.findRoleByName(resource.getName());
         if (optionalRole.isPresent()) {
             throw new CustomException("Role with this title already exist, please choose a different title", HttpStatus.CONFLICT);
@@ -38,7 +35,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public Role updateRole(RoleResponse resource) {
+    public Role updateRole(RoleRequest resource) {
         Optional<Role> optionalRole = roleRepository.findById(resource.getRoleId());
         if (!optionalRole.isPresent()) {
             throw new CustomException("Role not found", HttpStatus.UNPROCESSABLE_ENTITY);
@@ -51,11 +48,6 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public void deleteRole(Long roleId) {
         roleRepository.deleteById(roleId);
-    }
-
-    @Override
-    public Page<Role> viewAllRoles(Predicate predicate, Pageable pageable) {
-        return roleRepository.findAll(predicate, pageable);
     }
 
     @Override

@@ -5,9 +5,11 @@ import com.countries.jpa.entity.Role;
 import com.countries.jpa.entity.User;
 import com.countries.jpa.repository.RoleRepository;
 import com.countries.jpa.repository.UserRepository;
-import com.countries.model.response.UserResponse;
+import com.countries.model.request.UserRequest;
 import com.countries.services.UserService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -32,7 +34,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User createUser(UserResponse resource) {
+    public User createUser(UserRequest resource) {
         Optional<User> optionalUser = userRepository.findUserByUsername(resource.getUsername());
         if(optionalUser.isPresent()) {
             throw new CustomException("User already exist with the given title, please choose another username", HttpStatus.CONFLICT);
@@ -54,7 +56,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User updateUser(UserResponse resource) {
+    public User updateUser(UserRequest resource) {
         Optional<User> optionalUser = userRepository.findById(resource.getId());
         if(optionalUser.isPresent()) {
             User user = optionalUser.get();
@@ -85,6 +87,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<User> viewUserByUsername(String username) {
         return userRepository.findUserByUsername(username);
+    }
+
+    @Override
+    public Page<User> findAllUsers(Pageable pageable) {
+        return userRepository.findAll(pageable);
     }
 
     @Override

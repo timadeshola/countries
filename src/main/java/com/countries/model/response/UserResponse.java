@@ -1,40 +1,17 @@
 package com.countries.model.response;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
-import java.util.List;
+import java.util.Date;
 
 @Data
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class UserResponse {
 
-    private Long id;
-
-    @NotNull(message = "username cannot be empty")
-    @Size(min = 3, message = "minimum length is 3")
     private String username;
-
-    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$",
-            message = "Password must have a least a number, uppercase and lower case, special characters")
-    @Size(min = 8, message = "minimum length is 8")
-    private String password;
-
-    @NotNull(message = "first name cannot be empty")
-    @Size(min = 3, message = "minimum length is 3")
     private String firstName;
-
-    @NotNull(message = "last name cannot be empty")
-    @Size(min = 3, message = "minimum length is 3")
     private String lastName;
-
-    @Email
-    @NotNull
+    private String fullName;
     private String email;
-
-    private List<Long> roleIds;
+    private Boolean status;
+    private Date dateCreated;
 }

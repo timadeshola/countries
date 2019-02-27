@@ -10,15 +10,11 @@ import java.sql.Timestamp;
 
 @Entity
 @Table(name = "ROLES")
-@Setter
-@Getter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @RequiredArgsConstructor
-@ToString
-@EqualsAndHashCode
 @Audited
-@Builder
 public class Role implements GrantedAuthority, Serializable {
 
     @Id

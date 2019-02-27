@@ -1,9 +1,15 @@
 package com.countries.core.security;
 
+import com.countries.core.exceptions.CustomException;
+import com.countries.jpa.entity.Role;
+import com.countries.jpa.entity.User;
+import com.countries.jpa.repository.UserRepository;
+import com.countries.services.ApplicationService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -12,6 +18,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
@@ -21,6 +28,10 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static com.countries.core.constants.AppConstant.Security.*;
+
+@Service
+@Slf4j
 public class TokenHelper {
 
     private MyUserDetails myUserDetails;
@@ -38,23 +49,11 @@ public class TokenHelper {
         this.authorityDetails = authorityDetails;
     }
 
-    @Value("${jwt.app.secret}")
-    private String jwtSecretKey;
-
-    @Value("${jwt.expires.in}")
-    private Long jwtExpiresIn;
-
-    @Value("${jwt.token.prefix}")
-    private String jwtTokenPrefix;
-
-    @Value("${jwt.header}")
-    private String jwtHeader;
-
     private String secretKey = "";
 
     @PostConstruct
     protected void init() {
-        secretKey = Base64.getEncoder().encodeToString(applicationService.encryptStringData(passwordEncoder.encode(jwtSecretKey)).getBytes());
+        secretKey = Base64.getEncoder().encodeToString(applicationService.encryptStringData(passwordEncoder.encode(SECRET_KEY)).getBytes());
     }
 
     public String createToken(String username, Set<Role> roles) {
@@ -63,7 +62,7 @@ public class TokenHelper {
         claims.put("auth", roles.stream().map(role -> new SimpleGrantedAuthority(role.getAuthority())).collect(Collectors.toList()));
 
         Date now = new Date();
-        Date validity = new Date(now.getTime() + jwtExpiresIn);
+        Date validity = new Date(now.getTime() + EXPIRE_IN);
 
         return Jwts.builder()//
                 .setClaims(claims)//
@@ -88,8 +87,8 @@ public class TokenHelper {
     }
 
     public String resolveToken(HttpServletRequest req) {
-        String bearerToken = req.getHeader(jwtHeader);
-        if (bearerToken != null && bearerToken.startsWith(jwtTokenPrefix)) {
+        String bearerToken = req.getHeader(AUTHORIZATION);
+        if (bearerToken != null && bearerToken.startsWith(BEARER)) {
             return bearerToken.substring(7, bearerToken.length());
         }
         return null;

@@ -9,15 +9,11 @@ import java.sql.Timestamp;
 
 @Entity
 @Table(name = "COUNTRIES")
-@Setter
-@Getter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @RequiredArgsConstructor
-@ToString
-@EqualsAndHashCode
 @Audited
-@Builder
 public class Country implements Serializable {
 
     @Id
@@ -25,9 +21,11 @@ public class Country implements Serializable {
     private Long id;
 
     @Column(name = "name")
+    @NonNull
     private String name;
 
     @Column(name = "continent")
+    @NonNull
     private String continent;
 
     @Column(name = "date_created")
