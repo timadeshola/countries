@@ -24,3 +24,10 @@ HELP.md
 /nbdist/
 /.nb-gradle/
 /build/
+
+target\
+/.mvn/
+mvnw
+mvnw.cmd
+/logs/
+logs\
