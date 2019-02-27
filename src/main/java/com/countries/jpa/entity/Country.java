@@ -28,6 +28,10 @@ public class Country implements Serializable {
     @NonNull
     private String continent;
 
+    @Column(name = "code")
+    @NonNull
+    private String code;
+
     @Column(name = "date_created")
     private Timestamp dateCreated;
 
