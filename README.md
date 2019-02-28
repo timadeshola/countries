@@ -49,7 +49,17 @@ Run mvn clean install
 The run the application from your IntelliJ using the play button.
 
 This application is also hosted on Heroku.
-See link here.
+See link here https://countries-rest-api.herokuapp.com/swagger-ui
+
+This application implement the following features:
+
+* [Spring Boot]
+* [Securing a Web Application using Spring Security and JWT]
+* [Building REST services with Spring Boot]
+* [Spring Data JPA]
+* [Accessing data with SQL Server and H2]
+* [Spring Actuator]
+* [Building system Metric and using micrometer prometeus]
 
 
 

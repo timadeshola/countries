@@ -109,8 +109,8 @@ public class DefaultInstaller implements ApplicationListener<ContextRefreshedEve
 
     @Transactional
     protected void createCountryIfNotExist(String name, String continent) {
-        Optional<Country> optionalBook = countryRepository.findByName(name);
-        if(optionalBook.isPresent()) {
+        Optional<Country> optionalCountry = countryRepository.findByName(name);
+        if(optionalCountry.isPresent()) {
             return;
         }
         Country country = new Country();
