@@ -72,7 +72,7 @@ public class CountryControlller {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @GetMapping("/{name}")
     @ApiOperation(httpMethod = "GET", value = "Resource to view a country by country name", response = CountryResponse.class, nickname = "findCountryByName")
     @ApiResponses(value = {
@@ -114,7 +114,7 @@ public class CountryControlller {
         return new ResponseEntity<>(true, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @GetMapping
     @ApiOperation(httpMethod = "GET", value = "Resource to view all countries", response = PaginateResponse.class, nickname = "findAllCountries")
     @ApiResponses(value = {
