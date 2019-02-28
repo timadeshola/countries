@@ -61,7 +61,7 @@ This application implement the following features:
 * [Securing a Web Application using Spring Security and JWT]
 * [Building REST services with Spring Boot]
 * [Spring Data JPA]
-* [Accessing data with SQL Server, Mysql and H2]
+* [Accessing data with SQL Server, PostgreSQL and H2]
 * [Spring Actuator]
 * [Building system Metric and using micrometer prometeus]
 
