@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 
 @Service
-@Profile("dev")
+@Profile("staging")
 public class DefaultInstaller implements ApplicationListener<ContextRefreshedEvent> {
 
     private Boolean alreadySetup = Boolean.FALSE;
