@@ -43,10 +43,14 @@ DEPLOYMENT
 Local Deployment:
 Pull the source code from github repository here or download as zip file: https://github.com/timadeshola/countries.git
 
-If you download as zip file, extract the zip code, open IntelliJ, click on open existing project, select the pom.xml file 
-and click on Ok, Intellij will ask you if you want to open it as new project or new file, click on Project.
-Run mvn clean install
-The run the application from your IntelliJ using the play button.
+If you download as zip file, extract the zip code, 
+* open IntelliJ, click on open existing project, 
+* select the pom.xml file 
+* click on Ok, 
+* Intellij will ask you if you want to open it as new project or new file, 
+* click on Project.
+* Run mvn clean install
+* The run the application from your IntelliJ using the play button.
 
 This application is also hosted on Heroku.
 See link here https://countries-rest-api.herokuapp.com/swagger-ui
@@ -57,7 +61,7 @@ This application implement the following features:
 * [Securing a Web Application using Spring Security and JWT]
 * [Building REST services with Spring Boot]
 * [Spring Data JPA]
-* [Accessing data with SQL Server and H2]
+* [Accessing data with SQL Server, Mysql and H2]
 * [Spring Actuator]
 * [Building system Metric and using micrometer prometeus]
 
