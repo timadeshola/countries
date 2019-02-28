@@ -66,7 +66,7 @@ public class User implements Serializable {
     @Column(name = "last_logout_date")
     private Timestamp lastLogoutDate;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn
     private Set<Role> roles;
 
