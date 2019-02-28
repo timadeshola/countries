@@ -6,8 +6,8 @@ import com.countries.jpa.entity.User;
 import com.countries.jpa.repository.CountryRepository;
 import com.countries.jpa.repository.RoleRepository;
 import com.countries.jpa.repository.UserRepository;
-import org.modelmapper.ModelMapper;
 import org.springframework.context.ApplicationListener;
+import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 
 @Service
+@Profile("dev")
 public class DefaultInstaller implements ApplicationListener<ContextRefreshedEvent> {
 
     private Boolean alreadySetup = Boolean.FALSE;
@@ -24,14 +25,12 @@ public class DefaultInstaller implements ApplicationListener<ContextRefreshedEve
     private RoleRepository roleRepository;
     private PasswordEncoder passwordEncoder;
     private CountryRepository countryRepository;
-    private ModelMapper modelMapper;
 
-    public DefaultInstaller(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, CountryRepository countryRepository, ModelMapper modelMapper) {
+    public DefaultInstaller(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, CountryRepository countryRepository) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
         this.countryRepository = countryRepository;
-        this.modelMapper = modelMapper;
     }
 
 

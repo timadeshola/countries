@@ -14,6 +14,7 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @RequiredArgsConstructor
 @Audited
+@Builder
 public class Country implements Serializable {
 
     @Id

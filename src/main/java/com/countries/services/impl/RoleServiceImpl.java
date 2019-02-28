@@ -4,14 +4,18 @@ import com.countries.core.exceptions.CustomException;
 import com.countries.jpa.entity.Role;
 import com.countries.jpa.repository.RoleRepository;
 import com.countries.model.request.RoleRequest;
+import com.countries.model.request.UpdateRoleRequest;
 import com.countries.services.RoleService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import java.util.Optional;
 
 @Service
@@ -19,6 +23,9 @@ import java.util.Optional;
 public class RoleServiceImpl implements RoleService {
 
     private RoleRepository roleRepository;
+
+    @Autowired
+    private EntityManager entityManager;
 
     public RoleServiceImpl(RoleRepository roleRepository) {
         this.roleRepository = roleRepository;
@@ -37,7 +44,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public Role updateRole(RoleRequest resource) {
+    public Role updateRole(UpdateRoleRequest resource) {
         Optional<Role> optionalRole = roleRepository.findById(resource.getRoleId());
         if (!optionalRole.isPresent()) {
             throw new CustomException("Role not found", HttpStatus.UNPROCESSABLE_ENTITY);
@@ -49,20 +56,18 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public void deleteRole(Long roleId) {
-        roleRepository.deleteById(roleId);
+        Optional<Role> roles = roleRepository.findById(roleId);
+        roles.ifPresent(role -> roleRepository.delete(role));
     }
 
     @Override
-    public Optional<Role> viewRoleById(Long roleId) {
-        return roleRepository.findById(roleId);
-    }
-
-    @Override
+    @Transactional(readOnly = true)
     public Optional<Role> viewRoleByName(String name) {
         return roleRepository.findRoleByName(name);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<Role> findAllRoles(Pageable pageable) {
         return roleRepository.findAll(pageable);
     }

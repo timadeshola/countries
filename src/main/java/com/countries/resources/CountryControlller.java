@@ -17,17 +17,18 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("api/v1/countries")
 @Slf4j
-@Api(value = "api/v1/countries", description = "Endpoint for course management", tags = "Country Management")
-public class CourseControlller {
+@Api(value = "api/v1/countries", description = "Endpoint for country management", tags = "Country Management")
+public class CountryControlller {
 
     private CountryService countryService;
     private ModelMapper modelMapper;
 
-    public CourseControlller(CountryService countryService, ModelMapper modelMapper) {
+    public CountryControlller(CountryService countryService, ModelMapper modelMapper) {
         this.countryService = countryService;
         this.modelMapper = modelMapper;
     }
@@ -51,7 +52,7 @@ public class CourseControlller {
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'USER' )")
-    @PutMapping("update")
+    @PutMapping("/{countryId}")
     @ApiOperation(httpMethod = "PUT", value = "Resource to update a country", response = CountryResponse.class, nickname = "updateCountry")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Great! Country updated successfully"),
@@ -63,14 +64,38 @@ public class CourseControlller {
             @ApiResponse(code = 422, message = "Resource not found for the Country ID supplied"),
             @ApiResponse(code = 428, message = "Precondition Required, Illegal Argument supplied")
     })
-    public ResponseEntity<CountryResponse> updateCountry(@Valid @RequestBody CountryRequest request) {
-        Country country = countryService.updateCountry(request);
+    public ResponseEntity<CountryResponse> updateCountry(
+            @Valid @RequestBody CountryRequest request,
+            @ApiParam(name = "countryId", value = "Provide Country ID", required = true) @PathVariable("countryId") Long countryId) {
+        Country country = countryService.updateCountry(request, countryId);
         CountryResponse response = modelMapper.map(country, CountryResponse.class);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PreAuthorize("hasAnyRole('ADMIN')")
-    @DeleteMapping("delete")
+    @GetMapping("/{name}")
+    @ApiOperation(httpMethod = "GET", value = "Resource to view a country by country name", response = CountryResponse.class, nickname = "findCountryByName")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "View a Country"),
+            @ApiResponse(code = 400, message = "Something went wrong, check you request"),
+            @ApiResponse(code = 401, message = "Sorry, you are not authenticated"),
+            @ApiResponse(code = 403, message = "Sorry, you are unauthorized to access the resources"),
+            @ApiResponse(code = 404, message = "Resource not found, i guess your url is not correct"),
+            @ApiResponse(code = 428, message = "Precondition Required, Illegal Argument supplied")
+    })
+    public ResponseEntity<CountryResponse> findCountryByName(
+            @ApiParam(name = "name", value = "Provide Country Name", required = true)
+            @PathVariable(value = "name") String name) {
+        Optional<Country> optionalRole = countryService.findCountryByName(name);
+        if(optionalRole.isPresent()) {
+            CountryResponse response = modelMapper.map(optionalRole.get(), CountryResponse.class);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    @DeleteMapping("/{countryId}")
     @ApiOperation(httpMethod = "DELETE", value = "Resource to delete a country", responseReference = "true", nickname = "deleteCountry")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Great! Country deleted successfully"),
@@ -84,13 +109,13 @@ public class CourseControlller {
     })
     public ResponseEntity<Boolean> deleteCountry(
             @ApiParam(name = "countryId", value = "Provide Country ID", required = true)
-            @RequestParam(value = "countryId") Long countryId) {
+            @PathVariable(value = "countryId") Long countryId) {
         countryService.deleteCountryById(countryId);
         return new ResponseEntity<>(true, HttpStatus.OK);
     }
 
     @PreAuthorize("hasAnyRole('ADMIN')")
-    @GetMapping("all")
+    @GetMapping
     @ApiOperation(httpMethod = "GET", value = "Resource to view all countries", response = PaginateResponse.class, nickname = "findAllCountries")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "View All Countries"),

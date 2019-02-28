@@ -4,25 +4,19 @@ import com.countries.core.exceptions.CustomException;
 import com.countries.jpa.entity.Role;
 import com.countries.jpa.entity.User;
 import com.countries.jpa.repository.UserRepository;
-import com.countries.services.ApplicationService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
-import java.util.Base64;
 import java.util.Date;
 import java.util.Optional;
 import java.util.Set;
@@ -35,25 +29,13 @@ import static com.countries.core.constants.AppConstant.Security.*;
 public class TokenHelper {
 
     private MyUserDetails myUserDetails;
-    private PasswordEncoder passwordEncoder;
-    private ApplicationService applicationService;
     private UserRepository userRepository;
     private AuthorityDetails authorityDetails;
 
-    @Autowired
-    public TokenHelper(MyUserDetails myUserDetails, PasswordEncoder passwordEncoder, ApplicationService applicationService, UserRepository userRepository, AuthorityDetails authorityDetails) {
+    public TokenHelper(MyUserDetails myUserDetails, UserRepository userRepository, AuthorityDetails authorityDetails) {
         this.myUserDetails = myUserDetails;
-        this.passwordEncoder = passwordEncoder;
-        this.applicationService = applicationService;
         this.userRepository = userRepository;
         this.authorityDetails = authorityDetails;
-    }
-
-    private String secretKey = "";
-
-    @PostConstruct
-    protected void init() {
-        secretKey = Base64.getEncoder().encodeToString(applicationService.encryptStringData(passwordEncoder.encode(SECRET_KEY)).getBytes());
     }
 
     public String createToken(String username, Set<Role> roles) {
@@ -68,7 +50,7 @@ public class TokenHelper {
                 .setClaims(claims)//
                 .setIssuedAt(now)//
                 .setExpiration(validity)//
-                .signWith(SignatureAlgorithm.HS512, secretKey)//
+                .signWith(SignatureAlgorithm.HS512, SECRET_KEY)//
                 .compact();
     }
 
@@ -83,7 +65,7 @@ public class TokenHelper {
     }
 
     public String getUsername(String token) {
-        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
+        return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody().getSubject();
     }
 
     public String resolveToken(HttpServletRequest req) {
@@ -96,7 +78,7 @@ public class TokenHelper {
 
     public boolean validateToken(String token) {
         try {
-            Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
+            Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token);
             return true;
         } catch (JwtException | IllegalArgumentException e) {
             log.error("error validating token ==> {}", e.getMessage());

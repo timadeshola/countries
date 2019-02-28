@@ -1,6 +1,7 @@
 package com.countries.resources;
 
 import com.countries.jpa.entity.User;
+import com.countries.model.request.UpdateUserRequest;
 import com.countries.model.request.UserRequest;
 import com.countries.model.response.PaginateResponse;
 import com.countries.model.response.UserResponse;
@@ -17,12 +18,14 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/v1/user")
+@RequestMapping("/api/v1/users")
 @Slf4j
-@Api(value = "api/v1/user", description = "Endpoint for user management", tags = "User Management")
+@Api(value = "api/v1/users", description = "Endpoint for user management", tags = "User Management")
 public class UserController {
 
     private UserService userService;
@@ -34,7 +37,7 @@ public class UserController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("create")
+    @PostMapping
     @ApiOperation(httpMethod = "POST", value = "Resource to create a user", response = UserResponse.class, nickname = "createUser")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Great! User created successfully"),
@@ -54,7 +57,7 @@ public class UserController {
 
 
     @PreAuthorize("hasRole('ADMIN')")
-    @PutMapping("update")
+    @PutMapping
     @ApiOperation(httpMethod = "PUT", value = "Resource to update a user", responseReference = "true", nickname = "updateUser")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Great! User updated successfully"),
@@ -66,13 +69,13 @@ public class UserController {
             @ApiResponse(code = 422, message = "Resource not found for the User ID supplied"),
             @ApiResponse(code = 428, message = "Precondition Required, Illegal Argument supplied")
     })
-    public ResponseEntity<Boolean> updateUser(@Valid @RequestBody UserRequest request) {
+    public ResponseEntity<Boolean> updateUser(@Valid @RequestBody UpdateUserRequest request) {
         userService.updateUser(request);
         return new ResponseEntity<>(true, HttpStatus.OK);
     }
 
     @PreAuthorize("hasAnyRole('ADMIN')")
-    @DeleteMapping("delete")
+    @DeleteMapping
     @ApiOperation(httpMethod = "DELETE", value = "Resource to delete a user", responseReference = "true", nickname = "deleteUser")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Great! User deleted successfully"),
@@ -91,7 +94,7 @@ public class UserController {
     }
 
     @PreAuthorize("hasAnyRole('ADMIN')")
-    @GetMapping("all")
+    @GetMapping
     @ApiOperation(httpMethod = "GET", value = "Resource to view all users", response = PaginateResponse.class, nickname = "findAllUsers")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "View All Users"),
@@ -108,36 +111,20 @@ public class UserController {
         PageRequest pageable = PageRequest.of(page, size, Sort.Direction.DESC, "dateCreated");
         Page<User> users = userService.findAllUsers(pageable);
 
+        List<UserResponse> responses = new ArrayList<>();
+        users.getContent().forEach(user -> {
+            UserResponse userResponse = modelMapper.map(user, UserResponse.class);
+            responses.add(userResponse);
+        });
+
         PaginateResponse response = new PaginateResponse();
-        response.setContents(users.getContent());
+        response.setContents(responses);
         response.setTotalElements(users.getTotalElements());
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping("view-user")
-    @PreAuthorize("hasRole('ADMIN')")
-    @ApiOperation(httpMethod = "GET", value = "Resource to view a user by User ID", response = UserResponse.class, nickname = "viewUserById")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "View a User by User Id"),
-            @ApiResponse(code = 400, message = "Something went wrong, check you request"),
-            @ApiResponse(code = 401, message = "Sorry, you are not authenticated"),
-            @ApiResponse(code = 403, message = "Sorry, you are unauthorized to access the resources"),
-            @ApiResponse(code = 404, message = "Resource not found, i guess your url is not correct"),
-            @ApiResponse(code = 428, message = "Precondition Required, Illegal Argument supplied")
-    })
-    public ResponseEntity<UserResponse> viewUserById(
-            @ApiParam(name = "userId", value = "Provide User ID", required = true)
-            @RequestParam(value = "userId") Long userId) {
-        Optional<User> optionalUser = userService.viewUserById(userId);
-        if(optionalUser.isPresent()) {
-            UserResponse response = modelMapper.map(optionalUser.get(), UserResponse.class);
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        }
-        return new ResponseEntity<UserResponse>(HttpStatus.NOT_FOUND);
-    }
-
-    @GetMapping("view-user-username")
+    @GetMapping("/{username}")
     @PreAuthorize("hasRole('ADMIN')")
     @ApiOperation(httpMethod = "GET", value = "Resource to view a user by User name", response = UserResponse.class, nickname = "viewUserByUsername")
     @ApiResponses(value = {
@@ -149,16 +136,16 @@ public class UserController {
             @ApiResponse(code = 428, message = "Precondition Required, Illegal Argument supplied")
     })
     public ResponseEntity<UserResponse> viewUserByUsername(
-            @RequestParam(value = "username") String username) {
+            @PathVariable(value = "username") String username) {
         Optional<User> optionalUser = userService.viewUserByUsername(username);
         if(optionalUser.isPresent()) {
             UserResponse response = modelMapper.map(optionalUser.get(), UserResponse.class);
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
-        return new ResponseEntity<UserResponse>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @PutMapping("status")
+    @PutMapping("/{userId}")
     @PreAuthorize("hasRole('ADMIN')")
     @ApiOperation(httpMethod = "PUT", value = "Resource to toggle user status", responseReference = "true", nickname = "toggleUserStatus")
     @ApiResponses(value = {
@@ -171,7 +158,7 @@ public class UserController {
     })
     public ResponseEntity<Boolean> toggleUserStatus(
             @ApiParam(name = "userId", value = "Provide User ID", required = true)
-            @RequestParam(value = "userId") Long userId) {
+            @PathVariable(value = "userId") Long userId) {
         userService.toggleUserStatus(userId);
         return new ResponseEntity<>(true, HttpStatus.OK);
     }

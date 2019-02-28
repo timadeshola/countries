@@ -15,29 +15,19 @@ import java.util.List;
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-public class UserRequest {
+@NoArgsConstructor
+public class UpdateUserRequest {
 
-    @NotNull(message = "username cannot be empty")
-    @Size(min = 3, message = "minimum length is 3")
-    private String username;
+    private Long id;
 
-    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$",
-            message = "Password must have a least a number, uppercase and lower case, special characters")
-    @Size(min = 8, message = "minimum length is 8")
-    private String password;
-
-    @NotNull(message = "first name cannot be empty")
     @Size(min = 3, message = "minimum length is 3")
     private String firstName;
 
-    @NotNull(message = "last name cannot be empty")
     @Size(min = 3, message = "minimum length is 3")
     private String lastName;
 
     @Email
-    @NotNull
     private String email;
 
     private List<Long> roleIds;

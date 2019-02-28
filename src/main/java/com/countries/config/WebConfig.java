@@ -2,6 +2,7 @@ package com.countries.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import org.modelmapper.ModelMapper;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,11 +15,10 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import org.modelmapper.ModelMapper;
 
 import java.util.List;
 
-import static com.countries.core.utils.AppUtils.FORMATTER;
+import static com.countries.core.constants.AppConstant.DateFormatter.FORMATTER;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {

@@ -10,9 +10,10 @@ import javax.validation.constraints.NotNull;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class RoleRequest {
+public class UpdateRoleRequest {
+
+    private Long roleId;
 
     @NotNull
-    @NonNull
     private String name;
 }

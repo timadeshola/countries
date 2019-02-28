@@ -42,8 +42,8 @@ public class CountryServiceImpl implements CountryService {
     }
 
     @Override
-    public Country updateCountry(CountryRequest request) {
-        Optional<Country> countryOptional = countryRepository.findById(request.getId());
+    public Country updateCountry(CountryRequest request, Long countryId) {
+        Optional<Country> countryOptional = countryRepository.findById(countryId);
         if(countryOptional.isPresent()) {
             Country country = countryOptional.get();
             if(request.getName() != null) {
@@ -55,6 +55,12 @@ public class CountryServiceImpl implements CountryService {
             return countryRepository.save(country);
         }
         throw new CustomException("Country does not exist", HttpStatus.NOT_FOUND);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<Country> findCountryByName(String name) {
+        return countryRepository.findByName(name);
     }
 
     @Override

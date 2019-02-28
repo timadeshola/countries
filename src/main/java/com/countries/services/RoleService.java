@@ -2,6 +2,7 @@ package com.countries.services;
 
 import com.countries.jpa.entity.Role;
 import com.countries.model.request.RoleRequest;
+import com.countries.model.request.UpdateRoleRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -9,13 +10,11 @@ import java.util.Optional;
 
 public interface RoleService {
 
-    Role createRole(RoleRequest resource);
+    Role createRole(RoleRequest request);
 
-    Role updateRole(RoleRequest resource);
+    Role updateRole(UpdateRoleRequest request);
 
     void deleteRole(Long roleId);
-
-    Optional<Role> viewRoleById(Long roleId);
 
     Optional<Role> viewRoleByName(String name);
 

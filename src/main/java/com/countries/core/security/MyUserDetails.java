@@ -32,26 +32,22 @@ public class MyUserDetails implements UserDetailsService {
 
     @Override
     @Transactional
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException, DisabledException {
-
-        User user;
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
         try {
-//            if(username.contains("@")) {
-//                userOptional = userRepository.findByEmail(username);
-//            } else {
-//                userOptional = userRepository.findUserByUsername(username);
-//            }
             Optional<User> userOptional = userRepository.findUserByUsername(username);
 
-            log.info("user details : {}", AppUtils.toJSON(userOptional));
+            log.info("user object : {}", AppUtils.toJSON(userOptional));
 
             if (userOptional.isPresent()) {
-                user = userOptional.get();
-                log.info("user getUsername : {}", user.getUsername());
+                User user = userOptional.get();
                 if (user.getStatus().equals(true)) {
                     user.setLastLoginDate(new Timestamp(System.currentTimeMillis()));
                     userRepository.saveAndFlush(user);
+                }else {
+                    log.error("Error occurred :: User status is: {}", user.getStatus());
+                    throw new CustomException("User is not active, please contact your administrator", HttpStatus.LOCKED);
+                }
 
                     return org.springframework.security.core.userdetails.User//
                             .withUsername(username)//
@@ -63,10 +59,9 @@ public class MyUserDetails implements UserDetailsService {
                             .disabled(false)//
                             .build();
                 }
-            }
-
         } catch(Exception e){
-            throw new CustomException("user not found", HttpStatus.NOT_FOUND);
+            log.error("Error occurred :: {}", e.getMessage());
+            throw new CustomException("user not found", e.getCause(), e.getMessage(), HttpStatus.NOT_FOUND);
         }
         return null;
     }

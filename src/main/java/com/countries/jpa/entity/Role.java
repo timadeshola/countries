@@ -15,6 +15,7 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @RequiredArgsConstructor
 @Audited
+@Builder
 public class Role implements GrantedAuthority, Serializable {
 
     @Id

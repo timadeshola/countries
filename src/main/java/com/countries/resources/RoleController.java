@@ -2,6 +2,7 @@ package com.countries.resources;
 
 import com.countries.jpa.entity.Role;
 import com.countries.model.request.RoleRequest;
+import com.countries.model.request.UpdateRoleRequest;
 import com.countries.model.response.PaginateResponse;
 import com.countries.model.response.RoleResponse;
 import com.countries.services.RoleService;
@@ -19,10 +20,20 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.Optional;
 
+/**
+ * This class manages the application role's endpoint
+ * It is comprise of the below endpoints:
+ * Create Role Endpoint
+ * Update Role Endpoint
+ * Delete Role Endpoint
+ * View Role By Role Name Endpoint
+ * Toggle Role Status to either true or false
+ */
+
 @RestController
-@RequestMapping("api/v1/role")
+@RequestMapping("api/v1/roles")
 @Slf4j
-@Api(value = "api/v1/role", description = "Endpoint for role management", tags = "Role Management")
+@Api(value = "api/v1/roles", description = "Endpoint for role management", tags = "Role Management")
 public class RoleController {
 
     private RoleService roleService;
@@ -34,7 +45,7 @@ public class RoleController {
     }
 
     @PreAuthorize("hasAnyRole('ADMIN')")
-    @PostMapping("create")
+    @PostMapping
     @ApiOperation(httpMethod = "POST", value = "Resource to create a role", response = RoleResponse.class, nickname = "createRole")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Great! Role created successfully"),
@@ -52,7 +63,7 @@ public class RoleController {
     }
 
     @PreAuthorize("hasAnyRole('ADMIN')")
-    @PutMapping("update")
+    @PutMapping
     @ApiOperation(httpMethod = "PUT", value = "Resource to update a role", response = RoleResponse.class, nickname = "updateRole")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Great! Role updated successfully"),
@@ -64,14 +75,14 @@ public class RoleController {
             @ApiResponse(code = 422, message = "Resource not found for the Role ID supplied"),
             @ApiResponse(code = 428, message = "Precondition Required, Illegal Argument supplied")
     })
-    public ResponseEntity<RoleResponse> updateRole(@Valid @RequestBody RoleRequest request) {
+    public ResponseEntity<RoleResponse> updateRole(@Valid @RequestBody UpdateRoleRequest request) {
         Role role = roleService.updateRole(request);
         RoleResponse response = modelMapper.map(role, RoleResponse.class);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PreAuthorize("hasAnyRole('ADMIN')")
-    @DeleteMapping("delete")
+    @DeleteMapping
     @ApiOperation(httpMethod = "DELETE", value = "Resource to delete a role", responseReference = "true", nickname = "deleteRole")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Great! Role deleted successfully"),
@@ -91,7 +102,7 @@ public class RoleController {
     }
 
     @PreAuthorize("hasAnyRole('ADMIN')")
-    @GetMapping("all")
+    @GetMapping
     @ApiOperation(httpMethod = "GET", value = "Resource to view all roles", response = PaginateResponse.class, nickname = "viewAllRoles")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "View All Roles"),
@@ -116,29 +127,7 @@ public class RoleController {
     }
 
     @PreAuthorize("hasAnyRole('ADMIN')")
-    @GetMapping("view-role")
-    @ApiOperation(httpMethod = "GET", value = "Resource to view a role by Role ID", response = RoleResponse.class, nickname = "viewRoleById")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "View a Role"),
-            @ApiResponse(code = 400, message = "Something went wrong, check you request"),
-            @ApiResponse(code = 401, message = "Sorry, you are not authenticated"),
-            @ApiResponse(code = 403, message = "Sorry, you are unauthorized to access the resources"),
-            @ApiResponse(code = 404, message = "Resource not found, i guess your url is not correct"),
-            @ApiResponse(code = 428, message = "Precondition Required, Illegal Argument supplied")
-    })
-    public ResponseEntity<RoleResponse> viewRoleById(
-            @ApiParam(name = "roleId", value = "Provide Role ID", required = true)
-            @RequestParam(value = "roleId") Long roleId) {
-        Optional<Role> optionalRole = roleService.viewRoleById(roleId);
-        if(optionalRole.isPresent()) {
-            RoleResponse response = modelMapper.map(optionalRole.get(), RoleResponse.class);
-            return new ResponseEntity<RoleResponse>(response, HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-
-    @PreAuthorize("hasAnyRole('ADMIN')")
-    @GetMapping("view-role-name")
+    @GetMapping("/{name}")
     @ApiOperation(httpMethod = "GET", value = "Resource to view a role by Role Name", response = RoleResponse.class, nickname = "viewRoleByName")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "View a Role"),
@@ -150,17 +139,17 @@ public class RoleController {
     })
     public ResponseEntity<RoleResponse> viewRoleByName(
             @ApiParam(name = "name", value = "Provide Role Name", required = true)
-            @RequestParam(value = "name") String name) {
+            @PathVariable(value = "name") String name) {
         Optional<Role> optionalRole = roleService.viewRoleByName(name);
         if(optionalRole.isPresent()) {
             RoleResponse response = modelMapper.map(optionalRole.get(), RoleResponse.class);
-            return new ResponseEntity<RoleResponse>(response, HttpStatus.OK);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @PreAuthorize("hasAnyRole('ADMIN')")
-    @PutMapping("status")
+    @PutMapping("/{roleId}")
     @ApiOperation(httpMethod = "PUT", value = "Resource to toggle role status", responseReference = "true", nickname = "toggleRoleStatus")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Toggle role status successful"),
@@ -171,7 +160,7 @@ public class RoleController {
             @ApiResponse(code = 428, message = "Precondition Required, Illegal Argument supplied")
     })
     public ResponseEntity<Boolean> toggleRoleStatus(@ApiParam(name = "roleId", value = "Provide Role ID", required = true)
-            @RequestParam(value = "roleId") Long roleId) {
+            @PathVariable(value = "roleId") Long roleId) {
         roleService.toggleRoleStatus(roleId);
         return new ResponseEntity<>(true, HttpStatus.OK);
     }

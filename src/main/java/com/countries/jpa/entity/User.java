@@ -15,6 +15,7 @@ import java.util.Set;
 @NoArgsConstructor
 @RequiredArgsConstructor
 @Audited
+@Builder
 public class User implements Serializable {
 
     @Id
@@ -48,7 +49,7 @@ public class User implements Serializable {
     private String email;
 
     @Column(name = "status")
-    private Boolean status;
+    private Boolean status = Boolean.TRUE;
 
     @Column(name = "date_created")
     private Timestamp dateCreated;
@@ -65,8 +66,8 @@ public class User implements Serializable {
     @Column(name = "last_logout_date")
     private Timestamp lastLogoutDate;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn
     private Set<Role> roles;
 
     public String getFullName() {
