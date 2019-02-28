@@ -42,7 +42,9 @@ DEPLOYMENT
 
 Local Deployment:
 Pull the source code from github repository here or download as zip file: https://github.com/timadeshola/countries.git
-If you download as zip file, extract the zip code, open IntelliJ, click on open existing project, select the pom.xml file and click on Ok, Intellij will ask you if you want to open it as new project or new file, click on Project.
+
+If you download as zip file, extract the zip code, open IntelliJ, click on open existing project, select the pom.xml file 
+and click on Ok, Intellij will ask you if you want to open it as new project or new file, click on Project.
 Run mvn clean install
 The run the application from your IntelliJ using the play button.
 
