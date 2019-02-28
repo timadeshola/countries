@@ -52,26 +52,26 @@ public class DefaultInstaller implements ApplicationListener<ContextRefreshedEve
         createUserIfNotFound("timadeshola", "timadeshola@gmail.com", "John", "Adeshola", "Password@123",  adminRole);
         createUserIfNotFound("user", "user@example.com", "Paul", "Essien", "Password@123", userRole);
 
-        createCountryIfNotExist("Afghanistan", "Asia");
-        createCountryIfNotExist("Albania", "Europe");
-        createCountryIfNotExist("Algeria", "Africa");
-        createCountryIfNotExist("Andorra", "Europe");
-        createCountryIfNotExist("Angola", "Africa");
-        createCountryIfNotExist("Anguilla", "Americas");
-        createCountryIfNotExist("Argentina", "Americas");
-        createCountryIfNotExist("Australia", "Oceania");
-        createCountryIfNotExist("Austria", "Europe");
-        createCountryIfNotExist("Benin", "Africa");
-        createCountryIfNotExist("Nigeria", "Africa");
-        createCountryIfNotExist("Burkina Faso", "Africa");
-        createCountryIfNotExist("United Kingdom", "Europe");
-        createCountryIfNotExist("United States of America", "Americas");
-        createCountryIfNotExist("Ghana", "Africa");
-        createCountryIfNotExist("Cameroon", "Africa");
-        createCountryIfNotExist("Uruguay", "Americas");
-        createCountryIfNotExist("Africa", "Africa");
-        createCountryIfNotExist("Ukraine", "Europe");
-        createCountryIfNotExist("Turkey", "Asia");
+//        createCountryIfNotExist("Afghanistan", "Asia");
+//        createCountryIfNotExist("Albania", "Europe");
+//        createCountryIfNotExist("Algeria", "Africa");
+//        createCountryIfNotExist("Andorra", "Europe");
+//        createCountryIfNotExist("Angola", "Africa");
+//        createCountryIfNotExist("Anguilla", "Americas");
+//        createCountryIfNotExist("Argentina", "Americas");
+//        createCountryIfNotExist("Australia", "Oceania");
+//        createCountryIfNotExist("Austria", "Europe");
+//        createCountryIfNotExist("Benin", "Africa");
+//        createCountryIfNotExist("Nigeria", "Africa");
+//        createCountryIfNotExist("Burkina Faso", "Africa");
+//        createCountryIfNotExist("United Kingdom", "Europe");
+//        createCountryIfNotExist("United States of America", "Americas");
+//        createCountryIfNotExist("Ghana", "Africa");
+//        createCountryIfNotExist("Cameroon", "Africa");
+//        createCountryIfNotExist("Uruguay", "Americas");
+//        createCountryIfNotExist("Africa", "Africa");
+//        createCountryIfNotExist("Ukraine", "Europe");
+//        createCountryIfNotExist("Turkey", "Asia");
 
         alreadySetup = Boolean.TRUE;
     }
