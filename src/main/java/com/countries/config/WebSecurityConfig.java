@@ -61,8 +61,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         .add(new AntPathRequestMatcher("/**", method)));
         http
                 .authorizeRequests()
-                .antMatchers("/api/v1/user/reset-password", "/api/v1/user/forgot-password", "/api/v1/auth/login",
-                        "/api/v1/auth/logout", "/api/v1/user/registration-confirm", "/api/v1/user/sign-up").permitAll()
+                .antMatchers("/api/v1/auth/login").permitAll()
                 .antMatchers("/swagger-ui**").permitAll()
                 .anyRequest().authenticated();
 
@@ -86,9 +85,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers(HttpMethod.POST, "/api/v1/auth/login", "/api/v1/user/forgot-password", "/api/v1/user/reset-password", "/api/v1/user/registration-confirm", "/api/v1/user/sign-up");
-        web.ignoring().antMatchers(HttpMethod.PUT, "/api/v1/user/reset-password");
-        web.ignoring().antMatchers(HttpMethod.GET, "/", "/webjars/**", "/*.html", "/favicon.ico", "/**/*.html", "/**/*.css", "/**/*.js", "/api/v1/user/registration-confirm");
+        web.ignoring().antMatchers(HttpMethod.POST, "/api/v1/auth/login");
+        web.ignoring().antMatchers(HttpMethod.GET, "/", "/webjars/**", "/*.html", "/favicon.ico", "/**/*.html", "/**/*.css", "/**/*.js");
         web.ignoring()
                 .antMatchers("/v1/api-docs")
                 .antMatchers("/v2/api-docs")
